@@ -121,7 +121,7 @@ function cancelNewKitten(event) {
 }
 
 //Filtrar por descripción
-function filterKitten(event) {
+/*function filterKitten(event) {
     event.preventDefault();
     const descrSearchText = input_search_desc.value;
     listElement.innerHTML = "";
@@ -130,14 +130,15 @@ function filterKitten(event) {
             listElement.innerHTML += renderKitten(kittenItem);
         }
     }
-}
+}*/
+
 function filterKitten(event) {
     event.preventDefault();
     const kittensearchdesc = input_search_desc.value;
     const kittensearchrace = input_search_race.value;
     const kittenListFiltered = kittenDataList
-        .filter((kittenItem)=>kittenItem.desc.includes(kittensearchdesc))
-        .filter((kittenItem)=>kittenItem.race.includes(kittensearchrace));
+        .filter((kittenItem)=>kittenItem.desc.toLowerCase().includes(kittensearchdesc.toLowerCase()))
+        .filter((kittenItem)=>kittenItem.race.toLowerCase().includes(kittensearchrace.toLowerCase()));
   renderKittenList(kittenListFiltered);
   console.log(kittenListFiltered)
   }
