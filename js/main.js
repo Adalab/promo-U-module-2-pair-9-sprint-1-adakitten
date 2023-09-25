@@ -17,9 +17,13 @@ const labelMessageError = document.querySelector('.js-label-error');
 const input_search_desc = document.querySelector('.js_in_search_desc');
 const input_search_race = document.querySelector('.js_in_search_race');
 
+const GITHUB_USER = 'dianaString'; // <>?
+const SERVER_URL = `https://dev.adalab.es/api/kittens/${GITHUB_USER}`;
 
 //Objetos con cada gatito
-const kittenData_1 = {
+
+// No hace falta, se coge del servidor
+/* const kittenData_1 = {
     image: "https://dev.adalab.es/gato-siames.webp",
     name: "Anastacio",
     desc: "Porte elegante, su patrón de color tan característico y sus ojos de un azul intenso, pero su historia se remonta a Asía al menos hace 500 años, donde tuvo su origen muy posiblemente.",
@@ -36,13 +40,25 @@ const kittenData_3 = {
     name: "Sofia",
     desc: " Tienen la cabeza cuadrada y los ojos simétricos, por lo que su bella mirada se ha convertido en una de sus señas de identidad. Sus ojos son grandes y las orejas resultan largas y en punta.",
     race: "",
-};
+}; */
 
-const kittenDataList = [kittenData_1, kittenData_2, kittenData_3];
+//const kittenDataList = [kittenData_1, kittenData_2, kittenData_3];
+let kittenDataList = []; // let, se le van a cambiar los datos
 
-//Funciones
+// Fetch
+
+fetch(SERVER_URL) // https://dev.adalab.es/api/kittens/${GITHUB_USER}
+    .then((response)=> response.json()) //  response se conv a response.json() para poder manejarlo; response.json = data
+    .then((data)=>{
+        console.log(data); 
+        kittenDataList = data.results; // ????
+        console.log(kittenDataList); 
+        renderKittenList(kittenDataList);
+    });
+
+// Funciones
+
 function renderKitten(kittenData) {
-
 
     let html = '';
     if (kittenData.race === "") {
@@ -144,7 +160,10 @@ function filterKitten(event) {
   }
 
 //Mostrar el litado de gatitos en ell HTML
-renderKittenList(kittenDataList);
+/* renderKittenList(kittenDataList); */
+// ¿Por qué aparecería vacío?
+/* porque está vacío: let kittenDataList = [] 
+   se le añaden los datos en el fecth */
 
 //Eventos
 linkNewFormElememt.addEventListener("click", handleClickNewCatForm);
