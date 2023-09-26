@@ -17,8 +17,9 @@ const labelMessageError = document.querySelector('.js-label-error');
 const input_search_desc = document.querySelector('.js_in_search_desc');
 const input_search_race = document.querySelector('.js_in_search_race');
 
-const GITHUB_USER = 'dianaString'; // <>?
+const GITHUB_USER = 'mteresacastro'; // <>?
 const SERVER_URL = `https://dev.adalab.es/api/kittens/${GITHUB_USER}`;
+const kittenListStored = JSON.parse(localStorage.getItem('kittensList'));
 
 //Objetos con cada gatito
 
@@ -47,14 +48,34 @@ let kittenDataList = []; // let, se le van a cambiar los datos
 
 // Fetch
 
-fetch(SERVER_URL) // https://dev.adalab.es/api/kittens/${GITHUB_USER}
+/*fetch(SERVER_URL) // https://dev.adalab.es/api/kittens/${GITHUB_USER}
     .then((response)=> response.json()) //  response se conv a response.json() para poder manejarlo; response.json = data
     .then((data)=>{
         console.log(data); 
         kittenDataList = data.results; // ????
         console.log(kittenDataList); 
         renderKittenList(kittenDataList);
-    });
+    });*/
+
+if (kittenListStored !== null) {
+    kittenDataList = kittenListStored;
+    renderKitten(kittenData);
+    } else {
+    //sino existe el listado de gatitos en el local storage
+    //haz la petición al servidor
+    fetch(SERVER_URL) // https://dev.adalab.es/api/kittens/${GITHUB_USER}
+        .then((response)=> response.json()) //  response se conv a response.json() para poder manejarlo; response.json = data
+        .then((data)=>{
+            console.log(data); 
+            kittenDataList = data.results; 
+            localStorage.setItem('kittensList', JSON.stringify(kittenDataList));
+            console.log(kittenDataList); 
+            renderKittenList(kittenDataList);
+    })
+        .catch((error) => {
+        console.error(error);
+        });
+    }
 
 // Funciones
 
@@ -122,11 +143,21 @@ function addNewKitten(event) {
         labelMessageError.innerHTML = "¡Uy! parece que has olvidado algo";
     }
     else if (inputDesc.value !== "" && inputPhoto.value !== "" && inputName.value  !== "") {
-        labelMessageError.innerHTML = 'Mola! Un nuevo gatito en Adalab!';
-        kittenDataList.push(newKittenDataObject);
-        renderKittenList(kittenDataList);
+        fetch("https://dev.adalab.es/api/kittens/mteresacastro", { //cuando queremos insertar informacion
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(newKittenDataObject),
+        })
+            .then((response)=> response.json()) 
+            .then((data)=>{
+                labelMessageError.innerHTML = 'Mola! Un nuevo gatito en Adalab!';
+                kittenDataList.push(newKittenDataObject);
+                renderKittenList(kittenDataList);
+            }); 
+    } 
     }
-}
+
+    
 //Cancelar la búsqueda de un gatito
 function cancelNewKitten(event) {
     event.preventDefault();
