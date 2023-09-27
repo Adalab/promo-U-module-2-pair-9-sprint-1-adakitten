@@ -3,7 +3,7 @@
 
 /* Elementos que usamos en el HTML */
 const newFormElement = document.querySelector('.js-new-form');
-const listElement = document.querySelector('.js-list');
+const listElement = document.querySelector('.js-list'); // La Ul
 const searchButton = document.querySelector('.js-button-search');
 const buttonAdd = document.querySelector('.js-btn-add');
 const buttonCancelForm = document.querySelector('.js-btn-cancel');
@@ -59,7 +59,7 @@ let kittenDataList = []; // let, se le van a cambiar los datos
 
 if (kittenListStored !== null) {
     kittenDataList = kittenListStored;
-    renderKitten(kittenData);
+    renderKittenList(kittenDataList);
     } else {
     //sino existe el listado de gatitos en el local storage
     //haz la petición al servidor
@@ -79,17 +79,56 @@ if (kittenListStored !== null) {
 
 // Funciones
 
-function renderKitten(kittenData) {
-
+function renderKitten(kittenData) { // kittenItem = kittenData; kittenData puede ser Pepito
+    console.log('kittenData');
+    console.log(kittenData);
     let html = '';
     if (kittenData.race === "") {
         html = `Uy que despiste, no sabemos su raza`;
       } else {
         html = kittenData.race;
       }
+ 
+    // crear el li
+    const liElement = document.createElement('li'); 
+    /* const listElement = document.querySelector('.js-list'); */
 
+    liElement.classList.add('card');
 
-    const kitten = `<li class="card">
+    // crear la article
+    const articleElement  = document.createElement('article'); 
+    liElement.appendChild(articleElement);
+
+    // crear la imagen
+    const imgElement = document.createElement('img'); 
+    imgElement.setAttribute('src', kittenData.image);
+    imgElement.setAttribute('alt', 'gatito');
+    articleElement.appendChild(imgElement);
+
+    // crear el h3 de card_title
+    const h3Element1 = document.createElement('h3');
+    h3Element1.setAttribute('class', 'card_title');
+    const textH3a = document.createTextNode(kittenData.name); 
+    h3Element1.appendChild(textH3a);
+    articleElement.appendChild(h3Element1);
+
+    // crear el h3 de card_race
+    const h3Element2 = document.createElement('h3');
+    h3Element2.setAttribute('class', 'card_race');
+    const textH3b = document.createTextNode(html); 
+    h3Element2.appendChild(textH3b);
+    articleElement.appendChild(h3Element2);
+
+    // crear el párrafo
+    const pElement = document.createElement('p');
+    pElement.setAttribute('class', 'card_description');
+    const textp = document.createTextNode(kittenData.desc); 
+    pElement.appendChild(textp);
+    articleElement.appendChild(pElement);
+    
+    return liElement;  
+
+    /* const kitten = `<li class="card">
     <article>
       <img
         class="card_img"
@@ -102,14 +141,17 @@ function renderKitten(kittenData) {
       ${kittenData.desc}
       </p>
     </article>
-    </li>`;
-    return kitten;
+    </li>`; */
+    // return kitten;
 }
 
 function renderKittenList(kittenDataList) {
     listElement.innerHTML = "";
     for (const kittenItem of kittenDataList) {
-        listElement.innerHTML += renderKitten(kittenItem);
+        console.log('kittenItem');
+        console.log(kittenItem);
+        // listElement.innerHTML += renderKitten(kittenItem);
+        listElement.appendChild(renderKitten(kittenItem)); // kittenItem = kittenData
     }
 }
 
